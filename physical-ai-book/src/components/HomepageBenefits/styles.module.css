@@ -1,0 +1,91 @@
+/* styles.module.css for HomepageBenefits */
+
+.benefitsSection {
+  padding: 4rem 0;
+  background-color: #000; /* Dark background for a modern feel */
+  overflow: hidden; /* Contains the animations */
+  position: relative;
+  z-index: 1;
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.benefit {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit:hover {
+  transform: translateY(-10px);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+}
+
+.benefitImageContainer {
+  margin-bottom: 1.5rem;
+  height: 100px; /* Fixed height for consistency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.benefitImage {
+  max-height: 100%;
+  max-width: 100px;
+  filter: drop-shadow(0 0 15px var(--ifm-color-primary-lightest));
+}
+
+.benefitTitle {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.benefit p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- Responsive Design --- */
+
+/* For tablets */
+@media (max-width: 996px) {
+  .benefitsGrid {
+    grid-template-columns: 1fr; /* Stack on top of each other */
+    gap: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 768px) {
+  .benefitsSection {
+    padding: 3rem 0;
+  }
+
+  .benefit {
+    padding: 1.5rem;
+  }
+
+  .benefitTitle {
+    font-size: 1.3rem;
+  }
+}

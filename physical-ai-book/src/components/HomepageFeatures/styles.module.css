@@ -1,0 +1,33 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  width: 100%;
+  background: var(--ifm-background-surface-color);
+}
+
+.featureImg {
+  max-height: 200px;
+  width: 100%;
+  object-fit: contain; /* Ensure the entire image is visible */
+  flex-shrink: 0; /* Prevent the image from shrinking too much */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.featureImg:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 15px 40px rgba(234, 179, 8, 0.3);
+}
+
+.featureTitle {
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.featureDesc {
+  color: #a0a0a0;
+  line-height: 1.6;
+}

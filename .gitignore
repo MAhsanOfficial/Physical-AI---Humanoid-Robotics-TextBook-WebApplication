@@ -1,0 +1,34 @@
+# Node.js
+node_modules/
+dist/
+build/
+*.log
+.env*
+.docusaurus/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+*.egg-info/
+
+# Universal
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# Editor/OS Specific
+.editorconfig
+.cache/
+.npm/
+.yarn/
+
+# Docusaurus specific
+physical-ai-book/build/
+physical-ai-book/.docusaurus/
+physical-ai-book/node_modules/

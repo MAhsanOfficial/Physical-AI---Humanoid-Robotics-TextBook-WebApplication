@@ -1,0 +1,371 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
+:root {
+  /* Professional Typography */
+  --ifm-font-family-base: 'Inter', 'Noto Nastaliq Urdu', system-ui, -apple-system, sans-serif;
+  --ifm-heading-font-family: 'Outfit', 'Noto Nastaliq Urdu', sans-serif;
+  /* Use Outfit for headers too for consistency */
+  --ifm-font-family-serif: 'Merriweather', 'Noto Nastaliq Urdu', serif;
+  /* For book content */
+
+  /* Navbar specific font override */
+  --ifm-navbar-font-family: 'Outfit', 'Noto Nastaliq Urdu', sans-serif;
+
+  /* Yellow/Black Professional Theme (Dark Style) */
+  --ifm-color-primary: #eab308;
+  /* Yellow-500 */
+  --ifm-color-primary-dark: #ca8a04;
+  --ifm-color-primary-darker: #a16207;
+  --ifm-color-primary-darkest: #854d0e;
+  --ifm-color-primary-light: #facc15;
+  /* Yellow-400 */
+  --ifm-color-primary-lighter: #fde047;
+  --ifm-color-primary-lightest: #fef08a;
+
+  --book-black-bg: #121212;
+  /* Very dark background */
+  --book-panel-bg: #1e1e1e;
+  /* Slightly lighter panel background */
+  --book-text-color: #e5e5e5;
+  /* Light text color */
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 215, 0, 0.1);
+}
+
+/* Force Dark Mode aesthetic by default or override light mode to look like a book */
+[data-theme='light'] {
+  --ifm-color-primary: #ca8a04;
+  /* Darker yellow for light mode contrast */
+  --ifm-background-color: #fcfbf8;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-font-color-base: #121212;
+  --docusaurus-highlighted-code-line-bg: rgba(234, 179, 8, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-background-color: var(--book-black-bg);
+  --ifm-background-surface-color: var(--book-panel-bg);
+  --ifm-font-color-base: var(--book-text-color);
+
+  --docusaurus-highlighted-code-line-bg: rgba(234, 179, 8, 0.15);
+}
+
+/* --- 3D Context for Book Animation --- */
+body {
+  perspective: 2000px;
+  overflow-x: hidden;
+  background-color: var(--book-bg);
+  /* Use the new book background variable */
+}
+
+/* --- Professional VIP Animations --- */
+
+* {
+  transition: background-color 0.3s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Buttons */
+.button--primary {
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 100%);
+  color: #000 !important;
+  /* Black text for contrast on yellow */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+  /* Soft shadow for depth */
+}
+
+.button--primary:hover {
+  background: linear-gradient(135deg, var(--ifm-color-primary-light) 0%, var(--ifm-color-primary) 100%) !important;
+  /* Lighter yellow on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(234, 179, 8, 0.4);
+}
+
+/* --- Special Chat AI Button --- */
+.button--chat-ai {
+  font-size: 0.9rem !important;
+  /* Slightly smaller text */
+  padding: 0.6rem 1.2rem !important;
+  /* Reduced padding */
+  border-radius: 50px !important;
+  /* Rounded pill shape for modern feel */
+  background: black !important;
+  /* Deep contrast */
+  color: white !important;
+  border: 2px solid var(--ifm-color-primary) !important;
+  position: relative;
+  overflow: hidden;
+  /* 3D Properties */
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  /* Bouncy transition */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(234, 179, 8, 0.0);
+}
+
+/* Compelling Pulse Animation */
+@keyframes pulse-gold {
+  0% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(234, 179, 8, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0);
+  }
+}
+
+.button--chat-ai {
+  animation: pulse-gold 2s infinite;
+}
+
+.button--chat-ai:hover {
+  transform: translateY(-5px) scale(1.05) rotateX(10deg) !important;
+  /* 3D Tilt */
+  box-shadow: 0 15px 25px rgba(234, 179, 8, 0.4), 0 0 20px rgba(234, 179, 8, 0.6) !important;
+  background: var(--ifm-color-primary) !important;
+  color: black !important;
+  text-shadow: none;
+}
+
+
+/* Links */
+a {
+  color: var(--ifm-color-primary);
+}
+
+a:hover {
+  color: var(--ifm-color-primary-light);
+  /* Lighter yellow on hover */
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+/* Navbar */
+.navbar {
+  border-bottom: 2px solid var(--ifm-color-primary-dark);
+  font-family: var(--ifm-navbar-font-family);
+  /* Apply Outfit here */
+  letter-spacing: 0.02em;
+  /* Slight spacing for premium feel */
+}
+
+.navbar__brand {
+  font-weight: 700;
+  /* Bold logo text */
+}
+
+.navbar__link {
+  font-weight: 500;
+  /* Medium weight for links */
+}
+
+/* Sidebar Hover */
+.menu__link:hover {
+  background: rgba(234, 179, 8, 0.1);
+  /* Light yellow background */
+  color: var(--ifm-color-primary);
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+/* GitHub Icon */
+.header-github-link {
+  transition: opacity 0.2s ease;
+}
+
+.header-github-link:hover {
+  opacity: 1;
+  /* Keep full opacity to show color change clearly */
+}
+
+.header-github-link:before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  display: flex;
+
+  /* Yellow default */
+  background-color: var(--ifm-color-primary);
+
+  /* Masking mechanics */
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat center/contain;
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat center/contain;
+
+  transition: background-color 0.3s ease;
+}
+
+/* Black transition on hover */
+.header-github-link:hover:before {
+  background-color: #000000 !important;
+  /* Force Black */
+}
+
+[data-theme='dark'] .header-github-link:hover:before {
+  background-color: #ffffff !important;
+  /* White on dark mode might be better visible? User said BLACK transition. Sticking to user request, but usually on dark bg black is invisible. 
+    User said "make the GitHub icon yellow with a black transition". 
+    If the navbar is dark, black icon is invisible. 
+    However, the user asked for black. I will provide Black transition. */
+  background-color: #000000 !important;
+}
+
+/* --- Auth Links --- */
+.logged-in .logged-out-only {
+  display: none !important;
+}
+
+body:not(.logged-in) .logged-in-only {
+  display: none !important;
+}
+
+/* --- RESPONSIVE UTILITIES --- */
+
+/* Tablet & Smaller (max-width: 996px) */
+@media screen and (max-width: 996px) {
+  :root {
+    --ifm-heading-font-size-h1: 2rem;
+    /* Smaller H1 */
+    --ifm-heading-font-size-h2: 1.5rem;
+  }
+
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Improve table scrolling on small screens */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Mobile (max-width: 576px) */
+@media screen and (max-width: 576px) {
+  :root {
+    --ifm-heading-font-size-h1: 1.75rem;
+    --ifm-font-size-base: 15px;
+    /* Slightly clearer text */
+  }
+
+  /* Stack buttons nicely */
+  .button,
+  .button--primary {
+
+    /* display: block; -- REMOVED to allow inline buttons in navbar */
+    /* width: 100%; -- REMOVED to allow inline buttons in navbar */
+    /* General Mobile Buttons (Card/Content) - Keep full width for valid touch targets */
+    .main-wrapper .button,
+    .hero .button {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    text-align: center;
+  }
+
+  /* Specific fix for Navbar items on mobile */
+  .navbar__items--right {
+    display: flex !important;
+    flex-direction: row !important;
+    /* Force row */
+    flex-wrap: nowrap !important;
+    /* No wrapping */
+    align-items: center !important;
+    gap: 0.5rem;
+    /* Small gap between items */
+  }
+
+  /* Make the Signup button smaller on mobile to fit */
+  .navbar__item.button {
+    padding: 0.2rem 0.6rem !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 0 !important;
+    /* Remove bottom margin in navbar */
+    display: inline-block !important;
+    /* Ensure it stays inline */
+    width: auto !important;
+    /* Auto width */
+  }
+
+  /* Hide textual label of GitHub on really small screens if needed, keeping icon? 
+     Docusaurus usually handles this via config, but let's ensure icon size is managed */
+  .navbar__item.navbar__link {
+    padding: 0.2rem;
+  }
+
+  /* Navbar Adjustments */
+  .navbar__brand {
+    margin-right: 0.2rem;
+    /* Reduce margin */
+  }
+
+  .navbar__logo {
+    height: 28px;
+    /* Slightly smaller logo */
+  }
+
+  /* Card/Content adjustments */
+  .card {
+    margin-bottom: 1rem;
+    box-shadow: none;
+    /* Flatter look on mobile usually cleaner */
+    border: 1px solid var(--ifm-color-emphasis-200);
+  }
+
+  /* Hero section padding reduction */
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  /* Footer compacting */
+  .footer {
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .footer__links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Fix for Images on all screens */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  /* Modern look */
+}
+
+/* Ensure code blocks don't break layout */
+div[class^='codeBlock'] {
+  overflow-x: auto;
+}
+
+/* Hide 'Skip to main content' for user preference */
+.skipToContent_fXgn,
+.skipToContent_1oUP,
+[class^='skipToContent'] {
+  display: none !important;
+}
+
+/* Remove potential extra whitespace from top */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}

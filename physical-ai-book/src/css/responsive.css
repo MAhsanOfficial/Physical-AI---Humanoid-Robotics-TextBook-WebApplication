@@ -1,0 +1,230 @@
+/* --- GLOBAL RESPONSIVE ENHANCEMENTS --- */
+
+/* Fluid Typography for smoother scaling */
+html {
+  font-size: 16px;
+  /* Base font size */
+}
+
+@media screen and (min-width: 320px) and (max-width: 768px) {
+  html {
+    font-size: calc(14px + 6 * ((100vw - 320px) / 448));
+    /* Scale between 14px and 20px */
+  }
+}
+
+@media screen and (min-width: 768px) {
+  html {
+    font-size: 20px;
+    /* Larger base for desktops */
+  }
+}
+
+body {
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+/* --- LAYOUT & CONTAINER FIXES --- */
+
+/* More aggressive padding for smaller screens */
+.container {
+  padding-left: 5% !important;
+  padding-right: 5% !important;
+}
+
+@media screen and (max-width: 576px) {
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* Ensure navbar items don't crowd the logo */
+.navbar__items--right {
+  flex: 1;
+  justify-content: flex-end;
+  display: flex; /* Ensure flex behavior */
+  flex-wrap: nowrap; /* Prevent wrapping for the specified items */
+  align-items: center;
+  overflow-x: auto; /* Allow horizontal scrolling if items are too wide */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.navbar__items {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__item {
+  flex-shrink: 0; /* Prevent items from shrinking too much */
+  white-space: nowrap; /* Keep text on single line */
+  margin-left: 0.5rem; /* Add some spacing between items */
+}
+
+/* Ensure custom components within navbar items also respect flex rules */
+.navbar__item .custom-userBadge,
+.navbar__item .custom-languageToggle,
+.navbar__item .DocSearch {
+  display: flex;
+  align-items: center;
+}
+
+
+/* --- FOOTER SPECIFIC RESPONSIVENESS --- */
+.footer__links {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer__item {
+  margin-bottom: 0.5rem;
+}
+
+/* --- SPECIFIC COMPONENT RESPONSIVENESS --- */
+
+/* Make tables more readable on all screen sizes */
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Responsive Videos and Iframes */
+iframe,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better grid system for cards or feature lists */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- Mobile-specific UI/UX Improvements --- */
+@media screen and (max-width: 768px) {
+
+  /* Reduce visual noise on mobile */
+  .footer {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Ensure search bar is usable */
+  .DocSearch {
+    width: 100%;
+    margin-right: 0 !important;
+  }
+
+  /* Make sidebar navigation more touch-friendly */
+  .menu__link {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1.05rem;
+    /* Larger tap target */
+  }
+
+  /* Make sure hero text is centered and readable */
+  .hero__title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
+  .hero__subtitle {
+    font-size: 1.2rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  /* Further condense navbar items on smaller screens */
+  .navbar__item {
+    margin-left: 0.25rem; /* Reduce spacing */
+    padding: 0.25rem; /* Reduce padding */
+  }
+}
+
+/* --- Specific adjustments for HomepageFeatures columns --- */
+@media screen and (max-width: 768px) {
+  .feature-col {
+    flex: 0 0 100% !important;
+    /* Force full width on smaller screens */
+    max-width: 100% !important;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    /* Adjust padding for smaller screens */
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .feature-col {
+    padding: 0 0.5rem;
+    /* Further reduce padding on very small screens */
+  }
+
+  .featureTitle {
+    font-size: 1.25rem;
+    /* Smaller title on mobile */
+  }
+
+  .featureDesc {
+    font-size: 0.9rem;
+    /* Smaller description on mobile */
+  }
+}
+
+/* --- ULTRA-WIDE SCREEN ADJUSTMENTS --- */
+@media screen and (min-width: 1600px) {
+  .container {
+    max-width: 1400px;
+    /* Cap width to prevent content from stretching too much */
+  }
+
+  /* Increase font size slightly for better readability on large monitors */
+  html {
+    font-size: 22px;
+  }
+}
+
+/* --- PRINT STYLES --- */
+@media print {
+
+  body {
+    background-color: #fff;
+    color: #000;
+  }
+
+  .navbar,
+  .footer,
+  .sidebar,
+  .theme-admonition {
+    display: none;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  /* Show the URL of links when printing */
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}

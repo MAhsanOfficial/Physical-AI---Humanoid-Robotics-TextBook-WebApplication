@@ -31,7 +31,10 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Audience-Centric:** Is the plan and its output accessible to beginners and intermediate learners?
+- [ ] **Hands-On Learning:** Does the plan prioritize practical, hands-on examples and projects?
+- [ ] **Docusaurus Compatibility:** Are all technical decisions compatible with the Docusaurus framework?
+- [ ] **Brand Voice:** Does the proposed language and tone align with the project's approachable and expert voice?
 
 ## Project Structure
 

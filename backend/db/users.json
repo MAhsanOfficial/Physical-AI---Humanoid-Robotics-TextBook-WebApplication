@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Muhammad Ahsan",
+        "email": "idahsanali@gmail.com",
+        "phone": "03471777414",
+        "experience": "Basic",
+        "hashed_password": "$2b$12$9B3MuGfC9Ikq2s/V2EEmmuzEY0dP4o9tWjdMPI19OSN8K6dbnENYO"
+    },
+    {
+        "name": "Ali",
+        "email": "ali@gmail.com",
+        "phone": "23343524532",
+        "experience": "Basic",
+        "hashed_password": "$2b$12$1hcWN2P8WM6yJTVfu5MnQeOIyU0MWUq5zVYSRqeUR3cP27nGG6h8e"
+    },
+    {
+        "name": "junaid",
+        "email": "junaid@gmail.com",
+        "phone": "2343313434",
+        "experience": "Intermediate",
+        "hashed_password": "$2b$12$JnmjAnus0Aevdcc7bAWX2e58qBml52w8os7SD5dBGtEimq4WD5NEe"
+    }
+]
