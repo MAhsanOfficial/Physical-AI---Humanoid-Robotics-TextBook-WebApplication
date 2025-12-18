@@ -1,7 +1,66 @@
 // scripts/embed.js
 
 (function () {
-    const API_BASE_URL = "http://localhost:8090"; // Replace with your FastAPI backend URL
+    const API_BASE_URL = "http://localhost:8000"; // Replace with your FastAPI backend URL
+
+    /**
+     * Translation / localization helper
+     */
+    const AVAILABLE_LANGS = ['en', 'ur'];
+    let currentLang = localStorage.getItem('preferredLang') || 'en';
+
+    const translations = {
+        ur: {
+            translationModalTitle: 'اردو ترجمہ',
+            aiAnswerTitle: 'AI جواب',
+            yourQuestion: 'آپ کا سوال:',
+            contextLabel: 'سیاق و سباق:',
+            answerLabel: 'جواب:',
+            askAI: 'AI سے پوچھیں',
+            askSelected: 'منتخب متن سے پوچھیں',
+            personalize: 'ذاتی بنائیں',
+            translate: 'اردو میں دکھائیں',
+            showEnglish: 'انگریزی دکھائیں',
+            askAiSelectedTitle: 'منتخب متن کے بارے میں AI سے پوچھیں',
+            askAiBookTitle: 'کتاب کے بارے میں AI سے پوچھیں',
+            placeholderQuestion: 'اپنا سوال یہاں ٹائپ کریں...',
+            getAnswer: 'جواب حاصل کریں',
+            pleaseEnterQuestion: 'براہِ کرم سوال درج کریں۔',
+            gettingAnswer: 'جواب حاصل کیا جا رہا ہے...',
+            answerReceived: 'جواب موصول ہو گیا!',
+            selectTextFirst: 'براہِ کرم پہلے کچھ متن منتخب کریں!',
+            couldNotFindArticle: 'مضمون کا مواد نہیں ملا۔',
+            translatingPage: 'صفحہ ترجمہ کیا جا رہا ہے... براہِ کرم انتظار کریں۔',
+            translationReceived: 'ترجمہ موصول ہو گیا!'
+        },
+        en: {
+            translationModalTitle: 'Urdu Translation',
+            aiAnswerTitle: 'AI Answer',
+            yourQuestion: 'Your Question:',
+            contextLabel: 'Context:',
+            answerLabel: 'Answer:',
+            askAI: 'Ask AI',
+            askSelected: 'Ask from Selected Text Only',
+            personalize: 'Personalize Content',
+            translate: 'Translate to Urdu',
+            showEnglish: 'Show English',
+            askAiSelectedTitle: 'Ask AI about Selected Text',
+            askAiBookTitle: 'Ask AI about the Book',
+            placeholderQuestion: 'Type your question here...',
+            getAnswer: 'Get Answer',
+            pleaseEnterQuestion: 'Please enter a question.',
+            gettingAnswer: 'Getting answer...',
+            answerReceived: 'Answer received!',
+            selectTextFirst: 'Please select some text first!',
+            couldNotFindArticle: 'Could not find article content to translate.',
+            translatingPage: 'Translating page... this may take a moment.',
+            translationReceived: 'Translation received!'
+        }
+    };
+
+    function t(key) {
+        return (translations[currentLang] && translations[currentLang][key]) || translations['en'][key] || key;
+    }
 
     /**
      * Helper function to show a temporary message to the user.
@@ -64,6 +123,87 @@
         }
     }
 
+    // Save original article HTML so we can restore English without reload
+    let originalArticleHTML = null;
+
+    // Apply language to the page: try to fetch localized page first, fallback to backend translate
+    async function applyLanguage(lang) {
+        if (!document.querySelector('article.markdown')) return;
+        currentLang = AVAILABLE_LANGS.includes(lang) ? lang : 'en';
+        localStorage.setItem('preferredLang', currentLang);
+
+        const article = document.querySelector('article.markdown');
+        if (!originalArticleHTML) {
+            originalArticleHTML = article.innerHTML;
+        }
+
+        if (currentLang === 'en') {
+            // restore original English content and UI (with fade)
+            article.style.transition = 'opacity 0.25s ease-in-out';
+            article.style.opacity = 0;
+            setTimeout(() => {
+                article.style.direction = '';
+                article.style.textAlign = '';
+                article.innerHTML = originalArticleHTML;
+                injectButtons();
+                article.style.opacity = 1;
+            }, 250);
+            return;
+        }
+
+        // Try to fetch localized (Urdu) version of the current URL
+        try {
+            const path = window.location.pathname;
+            const urPath = path.startsWith('/ur') ? path : `/ur${path}`;
+            const resp = await fetch(urPath, { method: 'GET', credentials: 'same-origin' });
+            if (resp.ok) {
+                const html = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const localizedArticle = doc.querySelector('article.markdown');
+                if (localizedArticle) {
+                    // Replace article content with localized HTML
+                    article.style.transition = 'opacity 0.25s ease-in-out';
+                    article.style.opacity = 0;
+                    setTimeout(() => {
+                        article.style.direction = 'rtl';
+                        article.style.textAlign = 'right';
+                        article.innerHTML = localizedArticle.innerHTML;
+                        injectButtons();
+                        article.style.opacity = 1;
+                    }, 250);
+                    showTemporaryMessage(t('translationReceived'), 'success');
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('Failed to fetch localized page, falling back to backend translation.', e);
+        }
+
+        // Fallback: send article text to backend translator
+        const articleClone = article.cloneNode(true);
+        const buttonsContainer = articleClone.querySelector('#gemini-ai-buttons');
+        if (buttonsContainer) buttonsContainer.remove();
+        const textToTranslate = articleClone.innerText;
+        showTemporaryMessage(t('translatingPage'), 'info');
+        try {
+            const response = await postToBackend('/translate', { text: textToTranslate, target_language: 'Urdu' });
+            const translated = response.translated_text || response;
+            article.style.transition = 'opacity 0.25s ease-in-out';
+            article.style.opacity = 0;
+            setTimeout(() => {
+                article.style.direction = 'rtl';
+                article.style.textAlign = 'right';
+                article.innerHTML = `<div style="white-space: pre-wrap;">${translated}</div>`;
+                injectButtons();
+                article.style.opacity = 1;
+            }, 250);
+            showTemporaryMessage(t('translationReceived'), 'success');
+        } catch (err) {
+            showTemporaryMessage(t('couldNotFindArticle'), 'error');
+        }
+    }
+
     /**
      * Opens a modal to ask the user for a query.
      * @param {boolean} useSelectedText - If true, the query will be restricted to selected text.
@@ -115,7 +255,7 @@
 
         // Title
         const title = document.createElement('h3');
-        title.textContent = useSelectedText ? 'Ask AI about Selected Text' : 'Ask AI about the Book';
+        title.textContent = useSelectedText ? t('askAiSelectedTitle') : t('askAiBookTitle');
         modalContent.appendChild(title);
 
         // Selected text display (if applicable)
@@ -136,7 +276,7 @@
 
         // Textarea for query
         const queryTextarea = document.createElement('textarea');
-        queryTextarea.placeholder = 'Type your question here...';
+        queryTextarea.placeholder = t('placeholderQuestion');
         queryTextarea.rows = 4;
         queryTextarea.style.cssText = `
             width: calc(100% - 20px);
@@ -149,7 +289,7 @@
 
         // Submit button
         const submitButton = document.createElement('button');
-        submitButton.textContent = 'Get Answer';
+        submitButton.textContent = t('getAnswer');
         submitButton.style.cssText = `
             background-color: #007bff;
             color: white;
@@ -161,11 +301,11 @@
         submitButton.onclick = async () => {
             const query = queryTextarea.value.trim();
             if (!query) {
-                showTemporaryMessage('Please enter a question.', 'error');
+                showTemporaryMessage(t('pleaseEnterQuestion'), 'error');
                 return;
             }
 
-            showTemporaryMessage('Getting answer...', 'info');
+            showTemporaryMessage(t('gettingAnswer'), 'info');
             try {
                 let response;
                 if (useSelectedText) {
@@ -173,7 +313,7 @@
                 } else {
                     response = await postToBackend('/query', { query: query });
                 }
-                showTemporaryMessage('Answer received!', 'success');
+                showTemporaryMessage(t('answerReceived'), 'success');
                 displayAnswerModal(query, response.answer, useSelectedText ? selectedText : null);
             } catch (error) {
                 // Error already displayed by postToBackend
@@ -238,21 +378,20 @@
         modalContent.appendChild(closeButton);
 
         const title = document.createElement('h3');
-        title.textContent = 'AI Answer';
+        title.textContent = t('aiAnswerTitle');
         modalContent.appendChild(title);
-
         const queryDiv = document.createElement('p');
-        queryDiv.innerHTML = `<strong>Your Question:</strong> ${query}`;
+        queryDiv.innerHTML = `<strong>${t('yourQuestion')}</strong> ${query}`;
         modalContent.appendChild(queryDiv);
 
         if (selectedText) {
             const selectedTextDiv = document.createElement('div');
-            selectedTextDiv.innerHTML = `<strong>Context:</strong> <blockquote style="background-color: #f0f0f0; padding: 10px; border-left: 3px solid #ccc; margin: 10px 0; max-height: 100px; overflow-y: auto;">${selectedText}</blockquote>`;
+            selectedTextDiv.innerHTML = `<strong>${t('contextLabel')}</strong> <blockquote style="background-color: #f0f0f0; padding: 10px; border-left: 3px solid #ccc; margin: 10px 0; max-height: 100px; overflow-y: auto;">${selectedText}</blockquote>`;
             modalContent.appendChild(selectedTextDiv);
         }
 
         const answerDiv = document.createElement('div');
-        answerDiv.innerHTML = `<strong>Answer:</strong><br>${answer.replace(/\n/g, '<br>')}`; // Convert newlines to <br> for HTML display
+        answerDiv.innerHTML = `<strong>${t('answerLabel')}</strong><br>${answer.replace(/\n/g, '<br>')}`; // Convert newlines to <br> for HTML display
         answerDiv.style.marginTop = '15px';
         modalContent.appendChild(answerDiv);
 
@@ -308,7 +447,7 @@
         modalContent.appendChild(closeButton);
 
         const title = document.createElement('h3');
-        title.textContent = 'Urdu Translation';
+        title.textContent = t('translationModalTitle');
         modalContent.appendChild(title);
 
         const translationDiv = document.createElement('div');
@@ -358,24 +497,24 @@
             return button;
         };
 
-        const askAiButton = createButton('Ask AI', () => openQueryModal(false), '🧠');
-        const askSelectedButton = createButton('Ask from Selected Text Only', () => {
+        const askAiButton = createButton(t('askAI'), () => openQueryModal(false), '🧠');
+        const askSelectedButton = createButton(t('askSelected'), () => {
             const selectedText = window.getSelection().toString().trim();
             if (selectedText.length > 0) {
                 openQueryModal(true, selectedText);
             } else {
-                showTemporaryMessage('Please select some text first!', 'error');
+                showTemporaryMessage(t('selectTextFirst'), 'error');
             }
         }, '🔍');
-        const personalizeButton = createButton('Personalize Content', () => {
-            showTemporaryMessage('Personalize Content functionality not yet implemented.', 'info');
+        const personalizeButton = createButton(t('personalize'), () => {
+            showTemporaryMessage(t('personalize') + ' functionality not yet implemented.', 'info');
             // Future: Implement personalization logic here
             // e.g., open a modal for preferences, then call backend API
         }, '✨');
-        const translateButton = createButton('Translate to Urdu', async () => {
+        const translateButton = createButton(t('translate'), async () => {
             const article = document.querySelector('article.markdown');
             if (!article) {
-                showTemporaryMessage('Could not find article content to translate.', 'error');
+                showTemporaryMessage(t('couldNotFindArticle'), 'error');
                 return;
             }
 
@@ -389,10 +528,10 @@
             // Get text content to translate from the clone
             const textToTranslate = articleClone.innerText;
 
-            showTemporaryMessage('Translating page... this may take a moment.', 'info');
+            showTemporaryMessage(t('translatingPage'), 'info');
             try {
                 const response = await postToBackend('/translate', { text: textToTranslate, target_language: 'Urdu' });
-                showTemporaryMessage('Translation received!', 'success');
+                showTemporaryMessage(t('translationReceived'), 'success');
                 displayTranslationModal(response.translated_text);
             } catch (error) {
                 // Error handled in postToBackend
@@ -401,6 +540,28 @@
 
         // Clear existing buttons and add new ones
         buttonContainer.innerHTML = '';
+
+        // Language toggle (English / Urdu)
+        const langToggle = document.createElement('div');
+        langToggle.style.display = 'flex';
+        langToggle.style.gap = '6px';
+
+        const enBtn = document.createElement('button');
+        enBtn.textContent = 'English';
+        enBtn.className = 'button button--small';
+        enBtn.style.padding = '6px 8px';
+        enBtn.onclick = () => applyLanguage('en');
+
+        const urBtn = document.createElement('button');
+        urBtn.textContent = 'اردو';
+        urBtn.className = 'button button--small';
+        urBtn.style.padding = '6px 8px';
+        urBtn.onclick = () => applyLanguage('ur');
+
+        langToggle.appendChild(enBtn);
+        langToggle.appendChild(urBtn);
+
+        buttonContainer.appendChild(langToggle);
         buttonContainer.appendChild(askAiButton);
         buttonContainer.appendChild(askSelectedButton);
         buttonContainer.appendChild(personalizeButton);
@@ -413,7 +574,13 @@
     // or simply inject on page load.
     // For a robust integration, you would typically use a Docusaurus plugin or a React component.
     // As a standalone script, we'll try to inject after a small delay.
-    setTimeout(injectButtons, 1000); // Give Docusaurus time to render the content
+    setTimeout(() => {
+        injectButtons(); // Give Docusaurus time to render the content
+        // Apply saved language preference (default English)
+        if (currentLang && currentLang !== 'en') {
+            applyLanguage(currentLang);
+        }
+    }, 1000);
 
     // Listen for Docusaurus navigation events (if a client-side route change happens)
     // This is a common pattern for Docusaurus SPA

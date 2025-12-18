@@ -1,9 +1,8 @@
-sidebar_position: 1
-title: Introduction
-slug: /intro
----
-
 # Introduction
+## Physical AI Humanoid Robotics TextBook. 
+
+
+## Introduction
 
 Welcome to "Physical AI & Humanoid Robotics: A Complete Course for Embodied Intelligence"! This textbook serves as your definitive guide to understanding and building intelligent robotic systems that interact with the physical world.
 

@@ -12,4 +12,3 @@ export default function Root({ children }) {
         </AuthProvider>
     );
 }
-

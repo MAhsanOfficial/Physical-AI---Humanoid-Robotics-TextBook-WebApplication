@@ -1,5 +1,5 @@
 sidebar_position: 1
-title: Introduction
+title: Physical AI Humanoid Robotics TextBook.
 slug: /intro
 ---
 

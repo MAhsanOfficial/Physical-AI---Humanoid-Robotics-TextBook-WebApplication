@@ -4,16 +4,22 @@ const TranslationContext = createContext();
 
 const TRANSLATION_CACHE = new Map();
 
-export function TranslationProvider({ children, currentLocale }) {
+export function TranslationProvider({ children }) {
+    // State-based language: 'en' (default) or 'ur'
+    const [selectedLanguage, setSelectedLanguage] = useState('en');
     const [isTranslating, setIsTranslating] = useState(false);
 
-    const translateText = useCallback(async (text, targetLang = 'ur') => {
-        // Only translate if the current language is Urdu
-        if (!text || currentLocale !== 'ur') {
+    const toggleLanguage = useCallback(() => {
+        setSelectedLanguage(prev => prev === 'en' ? 'ur' : 'en');
+    }, []);
+
+    const translateText = useCallback(async (text) => {
+        // Only translate if Urdu is selected
+        if (!text || selectedLanguage !== 'ur') {
             return text;
         }
 
-        const cacheKey = `${targetLang}_${text.substring(0, 100)}`;
+        const cacheKey = `ur_${text.substring(0, 100)}`;
         if (TRANSLATION_CACHE.has(cacheKey)) {
             return TRANSLATION_CACHE.get(cacheKey);
         }
@@ -23,7 +29,7 @@ export function TranslationProvider({ children, currentLocale }) {
             const response = await fetch('http://localhost:8000/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, target_language: targetLang }),
+                body: JSON.stringify({ text, target_language: 'Urdu' }),
             });
 
             if (!response.ok) {
@@ -31,7 +37,7 @@ export function TranslationProvider({ children, currentLocale }) {
             }
 
             const data = await response.json();
-            const translatedText = data.translated_text || data.translated; // Adapt to potential API response keys
+            const translatedText = data.translated_text || data.translated || text;
             TRANSLATION_CACHE.set(cacheKey, translatedText);
             return translatedText;
         } catch (error) {
@@ -40,10 +46,11 @@ export function TranslationProvider({ children, currentLocale }) {
         } finally {
             setIsTranslating(false);
         }
-    }, [currentLocale]);
+    }, [selectedLanguage]);
 
     const value = {
-        currentLanguage: currentLocale,
+        selectedLanguage,
+        toggleLanguage,
         translateText,
         isTranslating,
     };
