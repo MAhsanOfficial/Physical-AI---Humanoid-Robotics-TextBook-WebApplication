@@ -207,13 +207,6 @@ Docusaurus makes deployment to GitHub Pages straightforward.
 
 The current "Personalize Content" button is a stub. This could be extended by integrating a user authentication system (e.g., using a simple OAuth flow or a dedicated service like Better-Auth). Once authenticated, user preferences (e.g., learning style, preferred level of detail) could be stored. The FastAPI backend could then use these preferences to modify the LLM's prompt, dynamically tailoring the content for each user.
 
-### 9.2 Urdu Translation Button
-
-The "Translate to Urdu" button is also a stub. Implementing this would involve:
-
-1.  **Backend Translation API**: Adding an endpoint to the FastAPI backend that takes text content and a target language (Urdu) and uses an LLM (or a dedicated translation API like Google Translate) to translate it.
-2.  **Frontend Integration**: The `embed.js` script would send the current page's content to this new backend endpoint and display the translated text, possibly in a new modal or by dynamically replacing the existing content.
-
 ## 10. License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
